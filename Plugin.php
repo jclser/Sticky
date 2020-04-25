@@ -54,7 +54,7 @@ class Sticky_Plugin implements Typecho_Plugin_Interface
         $sticky_html = new Typecho_Widget_Helper_Form_Element_Textarea(
           'sticky_html', NULL, "<span style='border-radius: 2px;font-weight: 400;padding: .1rem .25rem;font-size: 0.75rem;margin: 0 .25rem 0 .25rem;position: relative;top: -2px;background-color: #E5183B;color: #fff;'>置顶</span>",
           '置顶标题的 html', '这里的代码会自动插入置顶文章的标题后');
-        $sticky_html->input->setAttribute('rows', '7')->setAttribute('cols', '80');
+        $sticky_html->input->setAttribute('rows', '7')->setAttribute('cols', '50');
         $form->addInput($sticky_html);
 		
 		$sticky_cat = new Typecho_Widget_Helper_Form_Element_Radio('sticky_cat' , array('1'=>_t('开启'),'0'=>_t('关闭')),'0',_t('当前分类置顶'),_t('开启后只会在文章所属的分类中置顶'));
@@ -90,7 +90,7 @@ class Sticky_Plugin implements Typecho_Plugin_Interface
         foreach($sticky_cids as $cid) {
           if ($cid && $sticky_post = $db->fetchRow($archive->select()->where('cid = ?', $cid))) {
               if ($paded == 1) {                               // 首頁 page.1 才會有置頂文章
-                $sticky_post['title'] = $sticky_post['title'] . $config->sticky_html;
+                $sticky_post['title'] = $sticky_post['title'] . str_replace('"', '\'', $config->sticky_html);
                 $archive->push($sticky_post);                  // 選取置頂的文章先壓入
                 $pagesize = $pagesize - 1;
               }
@@ -123,7 +123,7 @@ class Sticky_Plugin implements Typecho_Plugin_Interface
       	        
           if ($cid && $sticky_post && $pattern) {
               if ($paded == 1) {
-                $sticky_post['title'] = $sticky_post['title'] . $config->sticky_html;
+                $sticky_post['title'] = $sticky_post['title'] . str_replace('"', '\'', $config->sticky_html);
                 $archive->push($sticky_post);
                 $pagesize = $pagesize - 1;
               }
